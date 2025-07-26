@@ -11,6 +11,7 @@ RUN apk --update --no-cache add \
     bash \
     curl \
     libgd \
+    nano \
     mysql-client \
     mariadb-connector-c \
     nginx \
@@ -34,6 +35,7 @@ RUN apk --update --no-cache add \
     php83-pdo_mysql \
     php83-pecl-uuid \
     php83-phar \
+    php83-pecl-redis \
     php83-session \
     php83-simplexml \
     php83-sodium \
