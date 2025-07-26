@@ -52,16 +52,15 @@ RUN apk --update --no-cache add \
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2"\
   TZ="UTC" \
   PUID="1000" \
-  PGID="1000"
+  PGID="1000" \
+  FLARUM_VERSION="v1.8.10"
 
-ARG FLARUM_VERSION
-RUN mkdir -p /opt/flarum \
-  && curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer \
-  && COMPOSER_CACHE_DIR="/tmp" composer create-project flarum/flarum /opt/flarum --no-install \
-  && COMPOSER_CACHE_DIR="/tmp" composer require --working-dir /opt/flarum flarum/core:${FLARUM_VERSION} \
+# Install Composer but don't install Flarum yet
+RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer \
   && composer clear-cache \
   && addgroup -g ${PGID} flarum \
   && adduser -D -h /opt/flarum -u ${PUID} -G flarum -s /bin/sh -D flarum \
+  && mkdir -p /opt/flarum \
   && chown -R flarum:flarum /opt/flarum \
   && rm -rf /root/.composer /tmp/*
 
