@@ -56,11 +56,13 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2"\
   FLARUM_VERSION="v1.8.10"
 
 # Install Composer but don't install Flarum yet
-RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer \
+RUN mkdir -p /opt/flarum \
+  && curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer \
+  && COMPOSER_CACHE_DIR="/tmp" composer create-project flarum/flarum /opt/flarum --no-install \
+  && COMPOSER_CACHE_DIR="/tmp" composer require --working-dir /opt/flarum flarum/core:${FLARUM_VERSION} \
   && composer clear-cache \
   && addgroup -g ${PGID} flarum \
   && adduser -D -h /opt/flarum -u ${PUID} -G flarum -s /bin/sh -D flarum \
-  && mkdir -p /opt/flarum \
   && chown -R flarum:flarum /opt/flarum \
   && rm -rf /root/.composer /tmp/*
 
